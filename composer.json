@@ -1,0 +1,35 @@
+{
+    "name": "klipper/form",
+    "type": "library",
+    "description": "Form component of Klipper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "François Pluchino",
+            "email": "francois.pluchino@klipper.dev"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.4.0",
+        "symfony/form": "^4.3.0"
+    },
+    "require-dev": {
+        "doctrine/orm": "^2.6.0",
+        "gedmo/doctrine-extensions": "^2.4.0",
+        "klipper/model-contracts": "^2.0.0",
+        "symfony/doctrine-bridge": "^4.3.0"
+    },
+    "autoload": {
+        "psr-4": { "Klipper\\Component\\Form\\": "" },
+        "exclude-from-classmap": [
+            "**/Tests/"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0-dev"
+        }
+    }
+}
