@@ -35,20 +35,13 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
     private $queryBuilder;
 
     /**
-     * @var string
-     */
-    private $class;
-
-    /**
      * Construct an ORM Query Builder Loader.
      *
      * @param QueryBuilder $queryBuilder The query builder for creating the query builder
-     * @param string       $class        The class name
      */
-    public function __construct(QueryBuilder $queryBuilder, string $class)
+    public function __construct(QueryBuilder $queryBuilder)
     {
         $this->queryBuilder = $queryBuilder;
-        $this->class = $class;
     }
 
     /**
@@ -105,12 +98,32 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
 
     private function translateQuery(Query $query): Query
     {
-        if (class_exists(TranslationWalker::class) && is_a($this->class, Translatable::class, true)) {
+        $class = $this->getRootFromClass($query);
+
+        if (null !== $class
+                && class_exists(TranslationWalker::class)
+                && is_a($class, Translatable::class, true)) {
             $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class);
             $query->setHint(TranslatableListener::HINT_TRANSLATABLE_LOCALE, \Locale::getDefault());
             $query->setHint(TranslatableListener::HINT_FALLBACK, 1);
         }
 
         return $query;
+    }
+
+    private function getRootFromClass(Query $query): ?string
+    {
+        $class = null;
+
+        /** @var Query\AST\IdentificationVariableDeclaration $idDecl */
+        foreach ($query->getAST()->fromClause->identificationVariableDeclarations as $idDecl) {
+            if (null !== $idDecl->rangeVariableDeclaration && $idDecl->rangeVariableDeclaration->isRoot) {
+                $class = $idDecl->rangeVariableDeclaration->abstractSchemaName;
+
+                break;
+            }
+        }
+
+        return $class;
     }
 }
