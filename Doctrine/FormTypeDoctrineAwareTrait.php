@@ -39,8 +39,6 @@ trait FormTypeDoctrineAwareTrait
      * Get the real object class name.
      *
      * @param string $class The class name
-     *
-     * @return string
      */
     protected function getObjectClass(string $class): string
     {
@@ -58,8 +56,6 @@ trait FormTypeDoctrineAwareTrait
      * @param array  $constructorArgs The arguments for the object constructor
      *
      * @throws
-     *
-     * @return object
      */
     protected function newInstance(string $class, array $constructorArgs = []): object
     {

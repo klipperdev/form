@@ -22,8 +22,6 @@ abstract class FormChoiceUtil
      * Convert the choice identifier list into form choices.
      *
      * @param array $choiceIdentifiers The choice identifiers
-     *
-     * @return array
      */
     public static function simpleList(array $choiceIdentifiers): array
     {
@@ -34,8 +32,6 @@ abstract class FormChoiceUtil
      * Get the choice identifiers keys.
      *
      * @param array $choiceIdentifiers The choice identifiers
-     *
-     * @return array
      */
     public static function simpleKeys(array $choiceIdentifiers): array
     {
@@ -46,8 +42,6 @@ abstract class FormChoiceUtil
      * Convert the grouped choice identifier list into form choices.
      *
      * @param array $choiceIdentifiers The choice identifiers
-     *
-     * @return array
      */
     public static function groupedList(array $choiceIdentifiers): array
     {

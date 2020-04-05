@@ -42,8 +42,6 @@ abstract class AbstractResolveTargetTypeExtension extends AbstractTypeExtension 
 
     /**
      * Get the option name.
-     *
-     * @return string
      */
     abstract public function getOptionName(): string;
 }

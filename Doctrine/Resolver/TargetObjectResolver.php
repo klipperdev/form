@@ -23,8 +23,6 @@ class TargetObjectResolver implements TargetObjectResolverInterface
 
     /**
      * Constructor.
-     *
-     * @param array $classes
      */
     public function __construct(array $classes = [])
     {
