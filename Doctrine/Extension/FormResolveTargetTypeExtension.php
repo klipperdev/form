@@ -29,7 +29,7 @@ class FormResolveTargetTypeExtension extends AbstractResolveTargetTypeExtension
     /**
      * {@inheritdoc}
      */
-    public static function getExtendedTypes(): array
+    public static function getExtendedTypes(): iterable
     {
         return [FormType::class];
     }

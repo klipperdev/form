@@ -29,7 +29,7 @@ class SymfonyEntityResolveTargetTypeExtension extends AbstractResolveTargetTypeE
     /**
      * {@inheritdoc}
      */
-    public static function getExtendedTypes(): array
+    public static function getExtendedTypes(): iterable
     {
         return [EntityType::class];
     }
