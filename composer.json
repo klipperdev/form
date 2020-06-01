@@ -13,13 +13,13 @@
     "prefer-stable": true,
     "require": {
         "php": "^7.4.0",
-        "symfony/form": "^4.4.0"
+        "symfony/form": "^5.1.0"
     },
     "require-dev": {
         "doctrine/orm": "^2.6.0",
         "gedmo/doctrine-extensions": "^2.4.0",
         "klipper/model-contracts": "^2.0.0",
-        "symfony/doctrine-bridge": "^4.4.0"
+        "symfony/doctrine-bridge": "^5.1.0"
     },
     "autoload": {
         "psr-4": { "Klipper\\Component\\Form\\": "" },
