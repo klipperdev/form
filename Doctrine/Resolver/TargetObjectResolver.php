@@ -16,14 +16,8 @@ namespace Klipper\Component\Form\Doctrine\Resolver;
  */
 class TargetObjectResolver implements TargetObjectResolverInterface
 {
-    /**
-     * @var array
-     */
-    private $targets = [];
+    private array $targets = [];
 
-    /**
-     * Constructor.
-     */
     public function __construct(array $classes = [])
     {
         foreach ($classes as $originalObject => $newObject) {
@@ -31,17 +25,11 @@ class TargetObjectResolver implements TargetObjectResolverInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function addResolveTargetObject(string $originalObject, string $targetObject): void
     {
         $this->targets[ltrim($originalObject, '\\')] = ltrim($targetObject, '\\');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getClass(string $class): string
     {
         return $this->targets[$class] ?? $class;

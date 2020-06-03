@@ -29,10 +29,8 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
      * entities.
      *
      * This property should only be accessed through queryBuilder.
-     *
-     * @var QueryBuilder
      */
-    private $queryBuilder;
+    private QueryBuilder $queryBuilder;
 
     /**
      * Construct an ORM Query Builder Loader.
@@ -44,16 +42,13 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
         $this->queryBuilder = $queryBuilder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEntities()
     {
         return $this->translateQuery($this->queryBuilder->getQuery())->execute();
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $identifier
      */
     public function getEntitiesByIds($identifier, array $values)
     {

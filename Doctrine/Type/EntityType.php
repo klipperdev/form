@@ -32,9 +32,6 @@ class EntityType extends SymfonyEntityType implements FormTypeDoctrineAwareInter
 {
     use FormTypeDoctrineAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
@@ -68,16 +65,14 @@ class EntityType extends SymfonyEntityType implements FormTypeDoctrineAwareInter
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $queryBuilder
+     * @param mixed $class
      */
     public function getLoader(ObjectManager $manager, $queryBuilder, $class): ORMQueryBuilderLoader
     {
-        return new ORMQueryBuilderLoader($queryBuilder, $class);
+        return new ORMQueryBuilderLoader($queryBuilder);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);

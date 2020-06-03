@@ -24,9 +24,6 @@ abstract class AbstractResolveTargetTypeExtension extends AbstractTypeExtension 
 {
     use FormTypeDoctrineAwareTrait;
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $self = $this;

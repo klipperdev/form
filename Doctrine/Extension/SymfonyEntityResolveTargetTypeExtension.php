@@ -18,17 +18,11 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
  */
 class SymfonyEntityResolveTargetTypeExtension extends AbstractResolveTargetTypeExtension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getOptionName(): string
     {
         return 'class';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getExtendedTypes(): iterable
     {
         return [EntityType::class];

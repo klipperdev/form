@@ -22,14 +22,8 @@ use Klipper\Component\Form\Doctrine\Resolver\TargetObjectResolverInterface;
  */
 trait FormTypeDoctrineAwareTrait
 {
-    /**
-     * @var null|TargetObjectResolverInterface
-     */
-    private $resolver;
+    private ?TargetObjectResolverInterface $resolver = null;
 
-    /**
-     * {@inheritdoc}
-     */
     public function setTargetObjectResolver(TargetObjectResolverInterface $resolver): void
     {
         $this->resolver = $resolver;

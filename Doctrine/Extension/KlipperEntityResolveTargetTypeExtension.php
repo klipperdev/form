@@ -18,17 +18,11 @@ use Klipper\Component\Form\Doctrine\Type\EntityType;
  */
 class KlipperEntityResolveTargetTypeExtension extends AbstractResolveTargetTypeExtension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getOptionName(): string
     {
         return 'class';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getExtendedTypes(): iterable
     {
         return [EntityType::class];
