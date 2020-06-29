@@ -50,7 +50,7 @@ class EntityType extends SymfonyEntityType implements FormTypeDoctrineAwareInter
                 public function reverseTransform($value)
                 {
                     $singleValue = !\is_array($value);
-                    $value = (array) $value;
+                    $value = $singleValue ? [$value] : $value;
 
                     foreach ($value as $i => $choice) {
                         if ($choice instanceof NameableInterface) {
