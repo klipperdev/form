@@ -58,7 +58,7 @@ class EntityType extends SymfonyEntityType implements FormTypeDoctrineAwareInter
                         }
                     }
 
-                    return $singleValue ? $value[0] : $value;
+                    return $singleValue ? ($value[0] ?? null) : $value;
                 }
             }
         );
