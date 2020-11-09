@@ -12,7 +12,9 @@
 namespace Klipper\Component\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Event\PreSubmitEvent;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -22,16 +24,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MapValueType extends AbstractType
 {
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (PreSubmitEvent $event): void {
+            $data = $event->getData();
+
+            if (\is_array($data)) {
+                $event->getForm()->setData($data);
+            }
+        });
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'allow_add' => true,
-            'allow_delete' => true,
+            'allow_extra_fields' => true,
         ]);
-    }
-
-    public function getParent(): string
-    {
-        return CollectionType::class;
     }
 }
