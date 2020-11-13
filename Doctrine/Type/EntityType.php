@@ -17,11 +17,8 @@ use Klipper\Component\Form\Doctrine\FormTypeDoctrineAwareInterface;
 use Klipper\Component\Form\Doctrine\FormTypeDoctrineAwareTrait;
 use Klipper\Contracts\Model\LabelableInterface;
 use Klipper\Contracts\Model\NameableInterface;
-use Symfony\Bridge\Doctrine\Form\ChoiceList\IdReader;
 use Symfony\Bridge\Doctrine\Form\Type\DoctrineType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType as SymfonyEntityType;
-use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,38 +28,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class EntityType extends SymfonyEntityType implements FormTypeDoctrineAwareInterface
 {
     use FormTypeDoctrineAwareTrait;
-
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        parent::buildForm($builder, $options);
-
-        if (!$options['nameable_as_value']) {
-            return;
-        }
-
-        $builder->addModelTransformer(
-            new class() implements DataTransformerInterface {
-                public function transform($value)
-                {
-                    return $value;
-                }
-
-                public function reverseTransform($value)
-                {
-                    $singleValue = !\is_array($value);
-                    $value = $singleValue ? [$value] : $value;
-
-                    foreach ($value as $i => $choice) {
-                        if ($choice instanceof NameableInterface) {
-                            $value[$i] = $choice->getName();
-                        }
-                    }
-
-                    return $singleValue ? ($value[0] ?? null) : $value;
-                }
-            }
-        );
-    }
 
     /**
      * @param mixed $queryBuilder
@@ -82,24 +47,16 @@ class EntityType extends SymfonyEntityType implements FormTypeDoctrineAwareInter
                 return 'label';
             }
 
-            return [DoctrineType::class, 'createChoiceLabel'];
-        };
-
-        $choiceValue = static function (Options $options) {
-            if ($options['nameable_as_value'] && is_a($options['class'], NameableInterface::class, true)) {
+            if ($options['labelable_as_label'] && is_a($options['class'], NameableInterface::class, true)) {
                 return 'name';
             }
 
-            return $options['id_reader'] instanceof IdReader && $options['id_reader']->isSingleId()
-                ? [$options['id_reader'], 'getIdValue']
-                : null;
+            return [DoctrineType::class, 'createChoiceLabel'];
         };
 
         $resolver->setDefaults([
             'labelable_as_label' => true,
-            'nameable_as_value' => true,
             'choice_label' => $choiceLabel,
-            'choice_value' => $choiceValue,
         ]);
 
         $resolver->addNormalizer('class', function (Options $options, $class) {
@@ -107,6 +64,5 @@ class EntityType extends SymfonyEntityType implements FormTypeDoctrineAwareInter
         });
 
         $resolver->addAllowedTypes('labelable_as_label', 'bool');
-        $resolver->addAllowedTypes('nameable_as_value', 'bool');
     }
 }
