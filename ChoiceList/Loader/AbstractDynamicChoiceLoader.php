@@ -12,7 +12,6 @@
 namespace Klipper\Component\Form\ChoiceList\Loader;
 
 use Klipper\Component\Form\ChoiceList\Factory\TagDecorator;
-use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface;
 use Symfony\Component\Form\ChoiceList\Factory\DefaultChoiceListFactory;
 use Symfony\Component\Form\ChoiceList\Factory\PropertyAccessDecorator;
@@ -24,8 +23,6 @@ use Symfony\Component\PropertyAccess\PropertyPath;
 abstract class AbstractDynamicChoiceLoader implements DynamicChoiceLoaderInterface
 {
     protected ChoiceListFactoryInterface $factory;
-
-    protected ChoiceListInterface $choiceList;
 
     protected bool $allowAdd = false;
 
