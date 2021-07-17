@@ -30,7 +30,10 @@ class DynamicDoctrineChoiceLoader extends AbstractDynamicChoiceLoader
      */
     private $choiceValue;
 
-    private string $idField;
+    /**
+     * @var callable|PropertyPath|string
+     */
+    private $idField;
 
     private ?ChoiceListInterface $choiceList = null;
 
@@ -39,7 +42,7 @@ class DynamicDoctrineChoiceLoader extends AbstractDynamicChoiceLoader
      *
      * @param EntityLoaderInterface             $objectLoader The objects loader
      * @param callable|PropertyPath|string      $choiceValue  The choice value
-     * @param string                            $idField      The id field
+     * @param callable|PropertyPath|string      $idField      The id field
      * @param null|callable|PropertyPath|string $label        The callable or path generating the choice labels
      * @param null|ChoiceListFactoryInterface   $factory      The factory for creating
      *                                                        the loaded choice list
@@ -47,7 +50,7 @@ class DynamicDoctrineChoiceLoader extends AbstractDynamicChoiceLoader
     public function __construct(
         EntityLoaderInterface $objectLoader,
         $choiceValue,
-        string $idField,
+        $idField,
         $label,
         ?ChoiceListFactoryInterface $factory = null
     ) {
@@ -100,7 +103,8 @@ class DynamicDoctrineChoiceLoader extends AbstractDynamicChoiceLoader
         }
 
         $value = $this->getCallableValue($value);
-        $unorderedObjects = $this->objectLoader->getEntitiesByIds($this->idField, $values);
+        $idField = \is_callable($this->idField) ? \call_user_func($this->idField) : $this->idField;
+        $unorderedObjects = $this->objectLoader->getEntitiesByIds($idField, $values);
         $objectsById = [];
         $objects = [];
 

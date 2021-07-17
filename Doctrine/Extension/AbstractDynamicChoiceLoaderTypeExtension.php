@@ -15,6 +15,7 @@ use Klipper\Component\Form\ChoiceList\Factory\TagDecorator;
 use Klipper\Component\Form\Doctrine\ChoiceList\ORMQueryBuilderLoader;
 use Klipper\Component\Form\Doctrine\Loader\DynamicDoctrineChoiceLoader;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceValue;
 use Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface;
 use Symfony\Component\Form\ChoiceList\Factory\DefaultChoiceListFactory;
 use Symfony\Component\Form\ChoiceList\Factory\PropertyAccessDecorator;
@@ -39,7 +40,13 @@ abstract class AbstractDynamicChoiceLoaderTypeExtension extends AbstractTypeExte
 
         $resolver->setDefaults([
             'id_field' => function (Options $options) {
-                return $options['id_reader']->getIdField();
+                $choiceValue = $options['choice_value'];
+
+                if ($choiceValue instanceof ChoiceValue) {
+                    $choiceValue = $choiceValue->getOption();
+                }
+
+                return $choiceValue;
             },
             'choice_loader' => function (Options $options) use ($choiceListFactory) {
                 return new DynamicDoctrineChoiceLoader(
@@ -54,6 +61,6 @@ abstract class AbstractDynamicChoiceLoaderTypeExtension extends AbstractTypeExte
             },
         ]);
 
-        $resolver->setAllowedTypes('id_field', ['string', 'null']);
+        $resolver->setAllowedTypes('id_field', ['string', 'null', 'callable']);
     }
 }
