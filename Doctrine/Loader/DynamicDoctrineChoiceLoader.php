@@ -32,6 +32,8 @@ class DynamicDoctrineChoiceLoader extends AbstractDynamicChoiceLoader
 
     private string $idField;
 
+    private ?ChoiceListInterface $choiceList = null;
+
     /**
      * Creates a new choice loader.
      *
