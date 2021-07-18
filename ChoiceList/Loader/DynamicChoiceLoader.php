@@ -25,6 +25,8 @@ class DynamicChoiceLoader extends AbstractDynamicChoiceLoader
 
     protected bool $allChoices = true;
 
+    private ?ChoiceListInterface $choiceList = null;
+
     /**
      * Creates a new choice loader.
      *
