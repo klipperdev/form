@@ -53,6 +53,17 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
     public function getEntitiesByIds($identifier, array $values)
     {
         $qb = clone $this->queryBuilder;
+        $entity = current($qb->getRootEntities());
+
+        if (!$identifier) {
+            $identifier = current(
+                $qb->getEntityManager()
+                    ->getMetadataFactory()
+                    ->getMetadataFor($entity)
+                    ->getIdentifier()
+            );
+        }
+
         $alias = current($qb->getRootAliases());
         $parameter = 'ORMQueryBuilderLoader_getEntitiesByIds_'.$identifier;
         $parameter = str_replace('.', '_', $parameter);
