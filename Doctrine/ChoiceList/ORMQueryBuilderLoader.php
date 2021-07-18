@@ -12,12 +12,15 @@
 namespace Klipper\Component\Form\Doctrine\ChoiceList;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\ConversionException;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\Translatable;
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
+use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
@@ -70,9 +73,8 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
         $where = $qb->expr()->in($alias.'.'.$identifier, ':'.$parameter);
 
         // Guess type
-        $entity = current($qb->getRootEntities());
         $metadata = $qb->getEntityManager()->getClassMetadata($entity);
-        if (\in_array($metadata->getTypeOfField($identifier), ['integer', 'bigint', 'smallint'], true)) {
+        if (\in_array($type = $metadata->getTypeOfField($identifier), ['integer', 'bigint', 'smallint'], true)) {
             $parameterType = Connection::PARAM_INT_ARRAY;
 
             // Filter out non-integer values (e.g. ""). If we don't, some
@@ -80,13 +82,29 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
             $values = array_values(array_filter($values, static function ($v) {
                 return (string) $v === (string) (int) $v || ctype_digit($v);
             }));
-        } elseif (\in_array($metadata->getTypeOfField($identifier), ['uuid', 'guid'], true)) {
+        } elseif (\in_array($type, ['ulid', 'uuid', 'guid'], true)) {
             $parameterType = Connection::PARAM_STR_ARRAY;
 
             // Like above, but we just filter out empty strings.
             $values = array_values(array_filter($values, static function ($v) {
                 return '' !== (string) $v;
             }));
+
+            // Convert values into right type
+            if (Type::hasType($type)) {
+                $doctrineType = Type::getType($type);
+                $platform = $qb->getEntityManager()->getConnection()->getDatabasePlatform();
+
+                foreach ($values as &$value) {
+                    try {
+                        $value = $doctrineType->convertToDatabaseValue($value, $platform);
+                    } catch (ConversionException $e) {
+                        throw new TransformationFailedException(sprintf('Failed to transform "%s" into "%s".', $value, $type), 0, $e);
+                    }
+                }
+
+                unset($value);
+            }
         } else {
             $parameterType = Connection::PARAM_STR_ARRAY;
         }
