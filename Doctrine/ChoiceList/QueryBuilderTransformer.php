@@ -11,6 +11,7 @@
 
 namespace Klipper\Component\Form\Doctrine\ChoiceList;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
@@ -21,8 +22,10 @@ class QueryBuilderTransformer
 {
     /**
      * Get the query from the query builder with transformation.
+     *
+     * @return AbstractQuery|Query
      */
-    public function getQuery(QueryBuilder $qb): Query
+    public function getQuery(QueryBuilder $qb): AbstractQuery
     {
         return $qb->getQuery();
     }

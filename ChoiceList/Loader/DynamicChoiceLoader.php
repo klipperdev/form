@@ -21,11 +21,11 @@ class DynamicChoiceLoader extends AbstractDynamicChoiceLoader
 {
     protected array $choices;
 
-    protected ?int $size;
+    protected ?int $size = null;
 
     protected bool $allChoices = true;
 
-    private ?ChoiceListInterface $choiceList = null;
+    protected ?ChoiceListInterface $choiceList = null;
 
     /**
      * Creates a new choice loader.

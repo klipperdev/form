@@ -14,6 +14,8 @@ namespace Klipper\Component\Form\Doctrine\ChoiceList;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
@@ -45,6 +47,51 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
         $this->queryBuilder = $queryBuilder;
     }
 
+    /**
+     * Cleaned the values and get the parameter type.
+     *
+     * @param QueryBuilder $qb         The query builder
+     * @param string       $identifier The identifier field of the object. This method
+     *                                 is not applicable for fields with multiple
+     *                                 identifiers.
+     * @param array        $values     The values of the identifiers
+     *
+     * @throws
+     *
+     * @return array The parameter type and the cleaned values
+     */
+    public static function cleanValues(QueryBuilder $qb, string $identifier, array $values): array
+    {
+        // Guess type
+        $entity = current($qb->getRootEntities());
+        $metadata = $qb->getEntityManager()->getClassMetadata($entity);
+
+        if (\in_array($metadata->getTypeOfField($identifier), ['integer', 'bigint', 'smallint'], true)) {
+            $parameterType = Connection::PARAM_INT_ARRAY;
+
+            // Filter out non-integer values (e.g. ""). If we don't, some
+            // databases such as PostgreSQL fail.
+            $values = array_values(array_filter($values, function ($v) {
+                return (string) $v === (string) (int) $v;
+            }));
+        } elseif ('guid' === $metadata->getTypeOfField($identifier)) {
+            $parameterType = Connection::PARAM_STR_ARRAY;
+            $type = Type::getType(Types::GUID);
+            $platform = $qb->getEntityManager()->getConnection()->getDatabasePlatform();
+
+            // Like above, but we just filter out empty strings and invalid guid.
+            $values = array_values(array_filter($values, function ($v) use ($type, $platform) {
+                $guid = $type->convertToDatabaseValue($v, $platform);
+
+                return !empty($guid) && '00000000-0000-0000-0000-000000000000' !== $guid;
+            }));
+        } else {
+            $parameterType = Connection::PARAM_STR_ARRAY;
+        }
+
+        return [$parameterType, $values];
+    }
+
     public function getEntities()
     {
         return $this->translateQuery($this->queryBuilder->getQuery())->execute();
@@ -52,6 +99,8 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
 
     /**
      * @param mixed $identifier
+     *
+     * @throws
      */
     public function getEntitiesByIds($identifier, array $values)
     {
@@ -74,6 +123,7 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
 
         // Guess type
         $metadata = $qb->getEntityManager()->getClassMetadata($entity);
+
         if (\in_array($type = $metadata->getTypeOfField($identifier), ['integer', 'bigint', 'smallint'], true)) {
             $parameterType = Connection::PARAM_INT_ARRAY;
 
@@ -120,7 +170,7 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
         ;
     }
 
-    private function translateQuery(Query $query): Query
+    private function translateQuery(AbstractQuery $query): AbstractQuery
     {
         $class = $this->getRootFromClass($query);
 
@@ -135,16 +185,18 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
         return $query;
     }
 
-    private function getRootFromClass(Query $query): ?string
+    private function getRootFromClass(AbstractQuery $query): ?string
     {
         $class = null;
 
-        /** @var Query\AST\IdentificationVariableDeclaration $idDecl */
-        foreach ($query->getAST()->fromClause->identificationVariableDeclarations as $idDecl) {
-            if (null !== $idDecl->rangeVariableDeclaration && $idDecl->rangeVariableDeclaration->isRoot) {
-                $class = $idDecl->rangeVariableDeclaration->abstractSchemaName;
+        if (method_exists($query, 'getAST')) {
+            /** @var Query\AST\IdentificationVariableDeclaration $idDecl */
+            foreach ($query->getAST()->fromClause->identificationVariableDeclarations as $idDecl) {
+                if (null !== $idDecl->rangeVariableDeclaration && $idDecl->rangeVariableDeclaration->isRoot) {
+                    $class = $idDecl->rangeVariableDeclaration->abstractSchemaName;
 
-                break;
+                    break;
+                }
             }
         }
 

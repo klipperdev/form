@@ -33,7 +33,7 @@ class TagDecorator implements ChoiceListFactoryInterface
         $this->decoratedFactory = $decoratedFactory;
     }
 
-    public function createListFromChoices($choices, $value = null): ChoiceListInterface
+    public function createListFromChoices($choices, $value = null, callable $filter = null): ChoiceListInterface
     {
         $value = function ($choice) use ($value) {
             if (\is_string($choice)) {
@@ -45,10 +45,10 @@ class TagDecorator implements ChoiceListFactoryInterface
                 : $choice;
         };
 
-        return $this->decoratedFactory->createListFromChoices($choices, $value);
+        return $this->decoratedFactory->createListFromChoices($choices, $value, $filter);
     }
 
-    public function createListFromLoader(ChoiceLoaderInterface $loader, $value = null): ChoiceListInterface
+    public function createListFromLoader(ChoiceLoaderInterface $loader, $value = null, callable $filter = null): ChoiceListInterface
     {
         $value = function ($choice) use ($value) {
             if (\is_string($choice)) {
@@ -60,10 +60,10 @@ class TagDecorator implements ChoiceListFactoryInterface
                 : $choice;
         };
 
-        return $this->decoratedFactory->createListFromLoader($loader, $value);
+        return $this->decoratedFactory->createListFromLoader($loader, $value, $filter);
     }
 
-    public function createView(ChoiceListInterface $list, $preferredChoices = null, $label = null, $index = null, $groupBy = null, $attr = null): ChoiceListView
+    public function createView(ChoiceListInterface $list, $preferredChoices = null, $label = null, callable $index = null, callable $groupBy = null, $attr = null): ChoiceListView
     {
         $label = function ($choice) use ($label, $list) {
             if (\is_string($choice)) {

@@ -14,6 +14,7 @@ namespace Klipper\Component\Form\Doctrine\Loader;
 use Klipper\Component\Form\ChoiceList\Loader\AbstractDynamicChoiceLoader;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\EntityLoaderInterface;
 use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
+use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceValue;
 use Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface;
 use Symfony\Component\Form\Exception\RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyPath;
@@ -188,6 +189,10 @@ class DynamicDoctrineChoiceLoader extends AbstractDynamicChoiceLoader
      */
     protected function getCallableValue(?callable $value = null): callable
     {
+        if ($this->choiceValue instanceof ChoiceValue && \is_callable($this->choiceValue->getOption())) {
+            return $this->choiceValue->getOption();
+        }
+
         return null === $value
             ? $this->choiceValue
             : $value;
