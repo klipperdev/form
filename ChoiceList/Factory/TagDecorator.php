@@ -63,7 +63,7 @@ class TagDecorator implements ChoiceListFactoryInterface
         return $this->decoratedFactory->createListFromLoader($loader, $value, $filter);
     }
 
-    public function createView(ChoiceListInterface $list, $preferredChoices = null, $label = null, callable $index = null, callable $groupBy = null, $attr = null): ChoiceListView
+    public function createView(ChoiceListInterface $list, $preferredChoices = null, $label = null, callable $index = null, callable $groupBy = null, $attr = null, $labelTranslationParameters = []): ChoiceListView
     {
         $label = function ($choice) use ($label, $list) {
             if (\is_string($choice)) {
@@ -92,6 +92,6 @@ class TagDecorator implements ChoiceListFactoryInterface
                 : (null !== $index ? $index : $position);
         };
 
-        return $this->decoratedFactory->createView($list, $preferredChoices, $label, $index, $groupBy, $attr);
+        return $this->decoratedFactory->createView($list, $preferredChoices, $label, $index, $groupBy, $attr, $labelTranslationParameters);
     }
 }

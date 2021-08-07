@@ -11,9 +11,13 @@
 
 namespace Klipper\Component\Form\Tests\Doctrine\ChoiceList;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -23,7 +27,6 @@ use Klipper\Component\Form\Tests\Doctrine\Fixtures\SingleIntIdEntity;
 use Klipper\Component\Form\Tests\Doctrine\Fixtures\SingleStringIdEntity;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\Doctrine\Test\DoctrineTestHelper;
 
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
@@ -46,7 +49,7 @@ final class AjaxORMQueryBuilderLoaderTest extends TestCase
      */
     public function testCheckIdentifierType(string $className, int $expectedType): void
     {
-        $em = DoctrineTestHelper::createTestEntityManager();
+        $em = $this->createTestEntityManager();
 
         $query = $this->mockQuery($em, $className, $expectedType, [1, 2]);
 
@@ -72,7 +75,7 @@ final class AjaxORMQueryBuilderLoaderTest extends TestCase
 
     public function testFilterNonIntegerValues(): void
     {
-        $em = DoctrineTestHelper::createTestEntityManager();
+        $em = $this->createTestEntityManager();
 
         $query = $this->mockQuery($em, SingleIntIdEntity::class, Connection::PARAM_INT_ARRAY, [1, 2, 3]);
 
@@ -98,7 +101,7 @@ final class AjaxORMQueryBuilderLoaderTest extends TestCase
 
     public function testFilterEmptyValues(): void
     {
-        $em = DoctrineTestHelper::createTestEntityManager();
+        $em = $this->createTestEntityManager();
 
         /** @var AbstractQuery|MockObject|Query $query */
         $query = $this->getMockBuilder(AbstractQuery::class)
@@ -132,7 +135,7 @@ final class AjaxORMQueryBuilderLoaderTest extends TestCase
 
     public function testSetSearch(): void
     {
-        $em = DoctrineTestHelper::createTestEntityManager();
+        $em = $this->createTestEntityManager();
 
         /** @var AbstractQuery|MockObject|Query $query */
         $query = $this->getMockBuilder(AbstractQuery::class)
@@ -159,7 +162,7 @@ final class AjaxORMQueryBuilderLoaderTest extends TestCase
 
     public function testGetEntities(): void
     {
-        $em = DoctrineTestHelper::createTestEntityManager();
+        $em = $this->createTestEntityManager();
 
         /** @var AbstractQuery|MockObject|Query $query */
         $query = $this->getMockBuilder(AbstractQuery::class)
@@ -219,7 +222,7 @@ final class AjaxORMQueryBuilderLoaderTest extends TestCase
      */
     protected function initEntityManager(): EntityManagerInterface
     {
-        $em = DoctrineTestHelper::createTestEntityManager();
+        $em = $this->createTestEntityManager();
         $schemaTool = new SchemaTool($em);
         $classes = [
             $em->getClassMetadata(SingleIntIdEntity::class),
@@ -257,5 +260,26 @@ final class AjaxORMQueryBuilderLoaderTest extends TestCase
         ;
 
         return $query;
+    }
+
+    private function createTestEntityManager(): EntityManager
+    {
+        if (!\extension_loaded('pdo_sqlite')) {
+            TestCase::markTestSkipped('Extension pdo_sqlite is required.');
+        }
+
+        $config = new Configuration();
+        $config->setEntityNamespaces(['SymfonyTestsDoctrine' => 'Symfony\Bridge\Doctrine\Tests\Fixtures']);
+        $config->setAutoGenerateProxyClasses(true);
+        $config->setProxyDir(sys_get_temp_dir());
+        $config->setProxyNamespace('SymfonyTests\Doctrine');
+        $config->setMetadataDriverImpl(new AnnotationDriver(new AnnotationReader()));
+
+        $params = [
+            'driver' => 'pdo_sqlite',
+            'memory' => true,
+        ];
+
+        return EntityManager::create($params, $config);
     }
 }
