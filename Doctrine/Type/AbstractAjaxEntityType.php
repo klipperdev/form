@@ -59,7 +59,8 @@ class AbstractAjaxEntityType extends AbstractType
                 $entityLoader = $type->getLoader($options, $queryBuilder);
             }
 
-            return new AjaxDoctrineChoiceLoader($entityLoader,
+            return new AjaxDoctrineChoiceLoader(
+                $entityLoader,
                 $options['choice_value'],
                 $options['id_reader']->getIdField(),
                 null === $options['choice_label_name'] && \is_string($options['choice_label']) ? $options['choice_label'] : $options['choice_label_name'],
