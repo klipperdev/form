@@ -64,7 +64,7 @@ class AbstractAjaxEntityType extends AbstractType
                 $options['choice_value'],
                 $options['id_reader']->getIdField(),
                 $options['choice_label'],
-                (string) $options['choice_label_name'],
+                (string) $options['search_identifier'],
                 $choiceListFactory
             );
         };
@@ -87,7 +87,7 @@ class AbstractAjaxEntityType extends AbstractType
             return [DoctrineType::class, 'createChoiceLabel'];
         };
 
-        $choiceLabelName = static function (Options $options) {
+        $searchIdentifier = static function (Options $options) {
             return \is_string($options['choice_label']) ? $options['choice_label'] : null;
         };
 
@@ -105,7 +105,7 @@ class AbstractAjaxEntityType extends AbstractType
             'choice_loader' => $choiceLoader,
             'choice_name' => $choiceName,
             'choice_label' => $choiceLabel,
-            'choice_label_name' => $choiceLabelName,
+            'search_identifier' => $searchIdentifier,
         ]);
 
         $resolver->addAllowedTypes('ajax_formatter', [AjaxChoiceListFormatterInterface::class]);
@@ -114,7 +114,7 @@ class AbstractAjaxEntityType extends AbstractType
         $resolver->addAllowedTypes('ajax_route_name', ['integer']);
         $resolver->addAllowedTypes('ajax_entity_loader', ['null', AjaxEntityLoaderInterface::class]);
         $resolver->addAllowedTypes('ajax_entity_filter', ['null', AjaxORMFilter::class]);
-        $resolver->setAllowedTypes('choice_label_name', ['string']);
+        $resolver->setAllowedTypes('search_identifier', ['string']);
         $resolver->addAllowedTypes('query_builder_transformer', ['null', QueryBuilderTransformer::class]);
     }
 
