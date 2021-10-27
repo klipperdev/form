@@ -63,7 +63,7 @@ class AbstractAjaxEntityType extends AbstractType
                 $entityLoader,
                 $options['choice_value'],
                 $options['id_reader']->getIdField(),
-                null === $options['choice_label_name'] && \is_string($options['choice_label']) ? $options['choice_label'] : $options['choice_label_name'],
+                $options['choice_label'],
                 (string) $options['choice_label_name'],
                 $choiceListFactory
             );
