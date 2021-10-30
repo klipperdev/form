@@ -32,26 +32,26 @@ interface AjaxChoiceListHelperInterface
      *
      * @param Request                            $request   The request
      * @param FormBuilderInterface|FormInterface $form      The choice loader or form or array
-     * @param string                             $formChild The form child
+     * @param null|string                        $formChild The form child
      * @param string                             $prefix    The prefix of parameters
      *
      * @throws InvalidArgumentException When the format is not allowed
      * @throws NotFoundHttpException
      */
-    public function generateResponse(Request $request, $form, string $formChild, string $prefix = ''): Response;
+    public function generateResponse(Request $request, $form, ?string $formChild = null, string $prefix = ''): Response;
 
     /**
      * Generates the ajax values for the response.
      *
      * @param Request                            $request   The request
      * @param FormBuilderInterface|FormInterface $form      The choice loader or form or array
-     * @param string                             $formChild The form child
+     * @param null|string                        $formChild The form child
      * @param string                             $prefix    The prefix of parameters
      *
      * @throws InvalidArgumentException When the format is not allowed
      * @throws NotFoundHttpException
      */
-    public function generateValues(Request $request, $form, string $formChild, string $prefix = ''): array;
+    public function generateValues(Request $request, $form, ?string $formChild = null, string $prefix = ''): array;
 
     /**
      * Gets the ajax data.

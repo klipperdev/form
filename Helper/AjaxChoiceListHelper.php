@@ -29,14 +29,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class AjaxChoiceListHelper implements AjaxChoiceListHelperInterface
 {
-    public function generateResponse(Request $request, $form, string $formChild, string $prefix = ''): Response
+    public function generateResponse(Request $request, $form, ?string $formChild = null, string $prefix = ''): Response
     {
         return $this->extractAjaxFormatter($form, $formChild)
             ->formatResponse($this->generateValues($request, $form, $formChild, $prefix))
         ;
     }
 
-    public function generateValues(Request $request, $form, string $formChild, string $prefix = ''): array
+    public function generateValues(Request $request, $form, ?string $formChild = null, string $prefix = ''): array
     {
         if (!$form instanceof FormBuilderInterface && !$form instanceof FormInterface) {
             throw new UnexpectedTypeException($form, FormInterface::class);
@@ -78,7 +78,7 @@ class AjaxChoiceListHelper implements AjaxChoiceListHelperInterface
      *
      * @throws InvalidArgumentException When the choice list is not an instance of AjaxChoiceListInterface
      */
-    protected function extractChoiceLoader($form, string $formChild): AjaxChoiceLoaderInterface
+    protected function extractChoiceLoader($form, ?string $formChild = null): AjaxChoiceLoaderInterface
     {
         $form = $this->getForm($form, $formChild);
 
@@ -92,7 +92,7 @@ class AjaxChoiceListHelper implements AjaxChoiceListHelperInterface
      *
      * @throws InvalidArgumentException When the ajax_formatter is not an instance of AjaxChoiceListFormatterInterface
      */
-    protected function extractAjaxFormatter($form, string $formChild): AjaxChoiceListFormatterInterface
+    protected function extractAjaxFormatter($form, ?string $formChild = null): AjaxChoiceListFormatterInterface
     {
         $form = $this->getForm($form, $formChild);
         $formatter = $form->getOption('ajax_formatter');
@@ -109,13 +109,13 @@ class AjaxChoiceListHelper implements AjaxChoiceListHelperInterface
      *
      * @param FormBuilderInterface|FormInterface $form The form
      */
-    protected function getForm($form, string $formChild): FormConfigInterface
+    protected function getForm($form, ?string $formChild = null): FormConfigInterface
     {
-        if (!$form->has($formChild)) {
+        if (null !== $formChild && !$form->has($formChild)) {
             throw new NotFoundHttpException();
         }
 
-        $value = $form->get($formChild);
+        $value = null !== $formChild ? $form->get($formChild) : $form;
 
         return $value instanceof FormInterface
             ? $value->getConfig()
