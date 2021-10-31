@@ -29,6 +29,8 @@ class AjaxDoctrineChoiceLoader extends DynamicDoctrineChoiceLoader implements Aj
 
     protected string $searchIdentifier;
 
+    private array $cacheEntities = [];
+
     /**
      * Creates a new choice loader.
      *
@@ -78,12 +80,22 @@ class AjaxDoctrineChoiceLoader extends DynamicDoctrineChoiceLoader implements Aj
     {
         $this->objectLoader->reset();
         $this->objectLoader->setSearch($this->searchIdentifier, $this->getSearch());
+        $this->cacheEntities = [];
 
         return $this;
     }
 
+    public function loadValuesForChoices(array $choices, $value = null): array
+    {
+        $this->cacheEntities = array_filter($choices, static function ($choice) {
+            return null !== $choice;
+        });
+
+        return parent::loadValuesForChoices($choices, $value);
+    }
+
     protected function loadEntities(): array
     {
-        return [];
+        return $this->cacheEntities;
     }
 }
