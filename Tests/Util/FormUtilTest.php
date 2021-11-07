@@ -57,7 +57,7 @@ final class FormUtilTest extends TestCase
             ->willReturn($formConfig)
         ;
 
-        /** @var FormInterface $form */
+        /* @var FormInterface $form */
         static::assertTrue(FormUtil::isFormType($form, TextType::class));
         static::assertTrue(FormUtil::isFormType($form, \get_class($formInnerType)));
         static::assertTrue(FormUtil::isFormType($form, [TextType::class, \get_class($formInnerType)]));
