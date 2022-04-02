@@ -34,10 +34,13 @@ final class EntityTypeTest extends TestCase
     {
         /** @var ManagerRegistry $mr */
         $mr = $this->getMockBuilder(ManagerRegistry::class)->getMock();
+
         /** @var ObjectManager $om */
         $om = $this->getMockBuilder(ObjectManager::class)->getMock();
+
         /** @var QueryBuilder $qb */
         $qb = $this->getMockBuilder(QueryBuilder::class)->disableOriginalConstructor()->getMock();
+
         /** @var FormBuilderInterface|\PHPUnit_Framework_MockObject_MockObject $builder */
         $builder = $this->getMockBuilder(FormBuilderInterface::class)->getMock();
 

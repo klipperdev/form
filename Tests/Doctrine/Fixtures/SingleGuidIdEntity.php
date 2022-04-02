@@ -28,6 +28,7 @@ class SingleGuidIdEntity
      * @Column(type="string")
      */
     public ?string $name;
+
     /**
      * @Id
      * @Column(type="guid")

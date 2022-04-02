@@ -33,6 +33,7 @@ class SingleStringIdEntity
      * @Column(type="array", nullable=true)
      */
     public array $phoneNumbers = [];
+
     /**
      * @Id
      * @Column(type="string")

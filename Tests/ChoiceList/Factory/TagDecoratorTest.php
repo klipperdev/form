@@ -106,6 +106,7 @@ final class TagDecoratorTest extends TestCase
             ->willReturnCallback(function ($funLoader, $value) use ($self, $loader) {
                 $self->assertSame($loader, $funLoader);
                 $self->assertInstanceOf(\Closure::class, $value);
+
                 /** @var ChoiceLoaderInterface|\PHPUnit_Framework_MockObject_MockObject $loader */
                 $result = $loader->loadValuesForChoices([], $value);
 
