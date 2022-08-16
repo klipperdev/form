@@ -151,7 +151,7 @@ final class AjaxDoctrineChoiceLoaderTest extends AbstractAjaxChoiceLoaderTest
             ->willReturnCallback(function ($value) use ($objects) {
                 foreach ($objects as $i => $object) {
                     if ($object === $value) {
-                        return $i;
+                        return (string) $i;
                     }
                 }
 
