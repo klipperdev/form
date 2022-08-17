@@ -62,8 +62,8 @@ class AjaxChoiceListHelper implements AjaxChoiceListHelperInterface
             $ajaxIds = [];
         }
 
-        $choiceLoader->setPageSize((int) ($request->get($prefix.'limit', $choiceLoader->getPageSize())));
-        $choiceLoader->setPageNumber((int) ($request->get($prefix.'page', $choiceLoader->getPageNumber())));
+        $choiceLoader->setPageSize((int) $request->get($prefix.'limit', $choiceLoader->getPageSize()));
+        $choiceLoader->setPageNumber((int) $request->get($prefix.'page', $choiceLoader->getPageNumber()));
         $choiceLoader->setSearch($request->get($prefix.'q', ''));
         $choiceLoader->setIds($ajaxIds);
         $choiceLoader->reset();
