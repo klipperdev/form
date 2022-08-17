@@ -34,9 +34,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
  *
- * @group klipper
- * @group klipper-form
- *
  * @internal
  */
 final class ORMQueryBuilderLoaderTest extends TestCase

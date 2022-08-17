@@ -21,9 +21,6 @@ use Symfony\Component\Form\ChoiceList\Loader\ChoiceLoaderInterface;
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
  *
- * @group klipper
- * @group klipper-form
- *
  * @internal
  */
 final class TagDecoratorTest extends TestCase
