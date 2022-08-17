@@ -72,7 +72,7 @@ abstract class BaseAjaxORMQueryBuilderLoader implements AjaxEntityLoaderInterfac
         return $result;
     }
 
-    public function getEntities()
+    public function getEntities(): array
     {
         $qb = clone $this->getFilterableQueryBuilder();
 
@@ -83,7 +83,7 @@ abstract class BaseAjaxORMQueryBuilderLoader implements AjaxEntityLoaderInterfac
         return $result;
     }
 
-    public function getEntitiesByIds($identifier, array $values)
+    public function getEntitiesByIds($identifier, array $values): array
     {
         $qb = clone $this->getQueryBuilder();
         $alias = current($qb->getRootAliases());

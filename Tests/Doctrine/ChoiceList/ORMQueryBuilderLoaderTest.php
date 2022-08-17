@@ -54,6 +54,10 @@ final class ORMQueryBuilderLoaderTest extends TestCase
     {
         $em = $this->createTestEntityManager();
         $query = $this->mockQuery($em, $className, $expectedType, [1, 2]);
+        $query->expects(static::once())
+            ->method('getResult')
+            ->willReturn([])
+        ;
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryBuilder $qb */
         $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
@@ -79,6 +83,10 @@ final class ORMQueryBuilderLoaderTest extends TestCase
     {
         $em = $this->createTestEntityManager();
         $query = $this->mockQuery($em, SingleIntIdEntity::class, Connection::PARAM_INT_ARRAY, [1, 2, 3]);
+        $query->expects(static::once())
+            ->method('getResult')
+            ->willReturn([])
+        ;
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryBuilder $qb */
         $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
@@ -143,6 +151,10 @@ final class ORMQueryBuilderLoaderTest extends TestCase
             ->setConstructorArgs([$em])
             ->setMethods(['execute', 'getSql', '_doExecute'])
             ->getMock()
+        ;
+        $query->expects(static::once())
+            ->method('execute')
+            ->willReturn([])
         ;
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|QueryBuilder $qb */

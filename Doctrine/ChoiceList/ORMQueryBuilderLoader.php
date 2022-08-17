@@ -92,7 +92,7 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
         return [$parameterType, $values];
     }
 
-    public function getEntities()
+    public function getEntities(): array
     {
         return $this->translateQuery($this->queryBuilder->getQuery())->execute();
     }
@@ -102,7 +102,7 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
      *
      * @throws
      */
-    public function getEntitiesByIds($identifier, array $values)
+    public function getEntitiesByIds($identifier, array $values): array
     {
         $qb = clone $this->queryBuilder;
         $entity = current($qb->getRootEntities());
