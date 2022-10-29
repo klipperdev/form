@@ -56,9 +56,9 @@ class ORMQueryBuilderLoader implements EntityLoaderInterface
      *                                 identifiers.
      * @param array        $values     The values of the identifiers
      *
-     * @throws
-     *
      * @return array The parameter type and the cleaned values
+     *
+     * @throws
      */
     public static function cleanValues(QueryBuilder $qb, string $identifier, array $values): array
     {

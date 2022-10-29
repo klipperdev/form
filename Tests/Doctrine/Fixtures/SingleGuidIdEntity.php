@@ -31,6 +31,7 @@ class SingleGuidIdEntity
 
     /**
      * @Id
+     *
      * @Column(type="guid")
      */
     protected ?string $id;

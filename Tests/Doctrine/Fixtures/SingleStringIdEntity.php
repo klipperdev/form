@@ -36,6 +36,7 @@ class SingleStringIdEntity
 
     /**
      * @Id
+     *
      * @Column(type="string")
      */
     protected ?string $id = null;
